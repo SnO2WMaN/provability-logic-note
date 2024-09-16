@@ -21,8 +21,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/configure-pages@v1
-      - uses: cachix/install-nix-action@v17
-      - run: nix build ".#default"
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - run: nix build .
       - uses: actions/upload-pages-artifact@v3
         with:
           path: result/
