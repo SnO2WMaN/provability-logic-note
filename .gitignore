@@ -8,6 +8,11 @@ result
 *.fdb_latexmk
 *.fls
 *.log
+*.bbl
+*.*-SAVE-ERROR
+*.bcf
+*.blg
+*.run.xml
 
 # VSCode
 # .vscode/settings.json

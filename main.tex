@@ -3,6 +3,8 @@
 \usepackage{amssymb}
 \usepackage{amsfonts}
 \usepackage{amsthm}
+\usepackage[backend=biber]{biblatex}
+\addbibresource{main.bib}
 
 \newcommand*{\Lang}[1]{\mathcal{L}_\mathrm{#1}}
 \newcommand*{\LangA}{\Lang{A}}
@@ -56,17 +58,80 @@
 
 \section{準備}
 
+定義と，基本的な事実を確認する．
+
 \subsection{不完全性定理}
 
 \begin{remark}
     一般の算術の文については $\sigma, \pi, \dots$ のようにギリシャ文字で表すことにする．
 \end{remark}
 
+\begin{definition}
+    $n \leq 1$ に対し，
+    $\Provable_T^n(\ulcorner \sigma \urcorner) \equiv \underbrace{\Provable_T(\ulcorner \cdots \Provable_T(\ulcorner}_{n} \sigma \urcorner) \cdots \urcorner)$ と定義する．
+\end{definition}
+
+
 \subsection{様相論理}
 
 \begin{remark}
     一般の様相論理式は $A,B,C,\dots$ のように普通のラテンアルファベットを用いて表すことにする．
 \end{remark}
+
+\begin{definition}
+    $\Box^n A$ を再帰的に以下のように定める．
+    \begin{itemize}
+        \item $\Box^0 A \equiv A$
+        \item $\Box^{n+1} A \equiv \Box \Box^n A$
+    \end{itemize}
+\end{definition}
+
+
+\begin{definition}
+    $M = (W, R, \Vdash)$ をKripkeモデル，$w \in W$ とする．
+    $w$ を始点とした $w R w_1 R w_2 \cdots$ という列で最長な列の長さを $d(w)$ とする．
+\end{definition}
+
+\begin{remark}
+    一般に $d(w)$ は自然数を取るとは限らない．
+    例えば $R$ が反射的ならば，$w R w_0 R w_1 R w_0 \cdots$ として任意の長さの列が存在しうるため，$d(w) = \infty$ となりうる．
+
+    しかし，$\LogicGL$ 有限木モデルは非反射的なのでそのような場合は考えなくてよく，そのため $d(w)$ は有限として考えてよい．
+    以下では $d(w) \in \omega$ とする．
+\end{remark}
+
+\begin{lemma}\label{lem:cannot_access}
+    $d(w) \leq n$ ならば $M,w \vDash \Box^{n + 1} A$
+\end{lemma}
+
+\begin{proof}
+    直感的には $d(w) \leq n$ ということは $w R^{n + 1} w'$ となる $w'$ が存在しないということを踏まえればほとんど明らか．
+    厳密な証明は $n$ についての帰納法を用いて示せばよい．
+    \qed
+\end{proof}
+
+\subsection{$\LogicGL$ について}
+
+\begin{definition}
+    有限 $\LogicGL$ 木モデル $M = (W = \{w_1,\dots,w_n\}, w_1, R, \Vdash)$ に対して，
+    根から下に新しく $w_0$ を生やして拡張した有限木 $\LogicGL$ モデル $(W' = \{w_0,w_1,\dots,w_n\}, w_0, R', \Vdash')$ を $M$ の単純拡張モデルと呼ぶ．
+
+    よりきちんと定義すると以下のとおりで，これは有限木 $\LogicGL$ モデルとなる．
+    \begin{itemize}
+        \item $W' = W \cup \{w_0\}$
+        \item $R' = R \cup \{(w_0,w_i) \mid w_i \in W\}$
+        \item $w \in W$ について $w \Vdash' p \iff w \Vdash p$
+        \item $w_0 \Vdash' p \iff w_1 \Vdash p$
+    \end{itemize}
+\end{definition}
+
+\begin{lemma}\label{lem:simple_extension}
+    $M'$ は $M$ の単純拡張とする．$w_i \in W$ ならば $M,w_i \nvDash B \implies M',w_i \nvDash B$
+\end{lemma}
+\begin{proof}
+    新しく追加された $w_0$ 以外は元のモデルと同じであり，$w_i \in W \iff w_i \neq w_0$ であるから，ほとんど明らか．
+    \qed
+\end{proof}
 
 \subsection{算術的解釈}
 
@@ -89,11 +154,13 @@
     すなわち，$\mathrm{Con}_T \equiv (\lnot \Box \bot)^{*_{\Provable_T}}$ である．
 \end{example}
 
+
+
 \section{$\LogicGL$ の算術的完全性定理}
 
 Solovayは証明可能性論理の出発点である次の定理を示した．この節ではその証明を追っていく．
 
-\begin{theorem}[$\LogicGL$ の算術的完全性定理]\label{thm:GL_arith_completeness}
+\begin{theorem}[$\LogicGL$ の算術的完全性定理 \cite*{solovay_provability_1976}]\label{thm:GL_arith_completeness}
     $\Provable_T$ は $T$ の標準的な証明可能性とし，
     $A$ は任意の様相論理式とする．
 
@@ -109,26 +176,6 @@ Solovayは証明可能性論理の出発点である次の定理を示した．�
     すなわち，$M = (W = \{1,\dots,n\}, 1, R, \Vdash)$ とし，$M,1 \nvDash A$ として考える．
 \end{proof}
 
-\begin{definition}
-    有限 $\LogicGL$ 木モデル $M = (W = \{1,\dots,n\}, 1, R, \Vdash)$ に対して，
-    根から下に新しく $0$ を生やして拡張した有限木 $\LogicGL$ モデル $(W' = \{0,1,\dots,n\}, 0, R', \Vdash')$ を $M$ の単純拡張モデルと呼ぶ．
-
-    よりきちんと定義すると以下のとおりで，これは有限木 $\LogicGL$ モデルとなる．
-    \begin{enumerate}
-        \item $W' = W \cup \{0\}$
-        \item $R' = R \cup \{(0,i) \mid i \in W\}$
-        \item $0 \Vdash' p \iff 1 \Vdash p$
-        \item $w \in W$ について $w \Vdash' p \iff w \Vdash p$
-    \end{enumerate}
-\end{definition}
-
-\begin{lemma}\label{lem:simple_extension}
-    $M'$ は $M$ の単純拡張とする．$i \in W$ ならば $M,i \nvDash B \implies M',i \nvDash B$
-\end{lemma}
-\begin{proof}
-    新しく追加された $0$ 以外は元のモデルと同じであるから，ほとんど明らか．
-    \qed
-\end{proof}
 
 \begin{definition}
     $M = (W = \{0,1,\dots,n\}, 0, R, \Vdash)$ に対し，以下の4条件を満たす $n + 1$ 個の文の列 $\beta_0, \beta_1, \dots, \beta_n$ を $M$ のSolovay文の列と呼ぶ．
@@ -162,7 +209,7 @@ Solovay解釈の性質として重要なのが次の補題である．
     \end{enumerate}
 \end{lemma}
 
-さて証明を進める．
+さて定理\ref{thm:GL_arith_completeness}の証明が出来る
 
 \begin{proof}[定理\ref{thm:GL_arith_completeness}の証明(2/3)]
     $M,1 \nvDash A$ だった．$M$ の単純拡張モデル $M' = (W', R', \Vdash')$ とすると補題\ref{lem:simple_extension}より $M',1 \nvDash A$ でもある．
@@ -170,52 +217,13 @@ Solovay解釈の性質として重要なのが次の補題である．
     補題\ref{lem:solovay_interpretation}より $T \vdash \beta_1 \to \lnot A^*$ を得て，対偶を取れば $T \vdash A^* \to \beta_1$ が得られる．
 
     今，仮に $T \vdash A^*$ とすると議論が破綻することを示す．
+    
     先ほど得た論理式より $T \vdash \beta_1$ であり，更に導出可能性条件 D1 より $T \vdash \Provable_T(\ulcorner \beta_1 \urcorner)$ が得られる．
     一方，単純拡張なので $0 R' 1$ であるからdより $T \vdash \beta_0 \to \lnot \Provable_T(\ulcorner \beta_1 \urcorner)$ であり，
     対偶を取れば $T \vdash \Provable_T(\ulcorner \beta_1 \urcorner) \to \lnot \beta_0$ が得られる．
     これらを合わせると $T \vdash \lnot \beta_0$ が得られる．
-    したがって a より $T \vdash \bigvee_{i \in W \setminus \{0\}} \beta_i$ である．
-\end{proof}
+    したがって a より $T \vdash \bigvee_{i \in W \setminus \{0\}} \beta_i$ である． 
 
-\begin{definition}
-    $M = (W, R, \Vdash)$ をKripkeモデル，$w \in W$ とする．
-    $w$ を始点とした $w R w_1 R w_2 \cdots$ という列で最長な列の長さを $d(w)$ とする．
-\end{definition}
-
-\begin{remark}
-    一般に $d(w)$ は自然数を取るとは限らない．
-    例えば $R$ が反射的ならば，$w R w_0 R w_1 R w_0 \cdots$ として任意の長さの列が存在しうるため，$d(w) = \infty$ となりうる．
-
-    しかし，$\LogicGL$ 有限木モデルは非反射的なのでそのような場合は考えなくてよく，そのため $d(w)$ は有限として考えてよい．
-    以下では $d(w) \in \omega$ とする．
-\end{remark}
-
-\begin{definition}
-    $\Box^n A$ を再帰的に以下のように定める．
-    \begin{itemize}
-        \item $\Box^0 A \equiv A$
-        \item $\Box^{n+1} A \equiv \Box \Box^n A$
-    \end{itemize}
-\end{definition}
-
-\begin{lemma}\label{lem:cannot_access}
-    $d(w) \leq n$ ならば $M,w \vDash \Box^{n + 1} A$
-\end{lemma}
-
-\begin{proof}
-    直感的には $d(w) \leq n$ ということは $w R^{n + 1} w'$ となる $w'$ が存在しないということを踏まえればほとんど明らか．
-    厳密な証明は $n$ についての帰納法を用いて示せばよい．
-    \qed
-\end{proof}
-
-\begin{definition}
-     $n \leq 1$ に対し，
-     $\Provable^n_T(\ulcorner \sigma \urcorner) \equiv \underbrace{\Provable_T(\ulcorner \cdots \Provable_T(\ulcorner}_{n} \sigma \urcorner) \cdots \urcorner)$ と定義する．
-\end{definition}
-
-これで，ひとまずは算術的完全性が証明出来る．
-
-\begin{proof}[定理\ref{thm:GL_arith_completeness}の証明(3/3)]
     $i \in W'$ かつ $i \neq 0$ としたとき，$d(i) \leq d(1)$ である．したがって補題 \ref{lem:cannot_access}より
     $M',i \vDash \Box^{d(1) + 1} \bot$ が得られる．
     更に補題\ref{lem:solovay_interpretation}より $T \vdash \beta_i \to (\Box^{d(1) + 1} \bot)^*$ であり，
@@ -228,5 +236,7 @@ Solovay解釈の性質として重要なのが次の補題である．
 \end{proof}
 
 残ったのはSolovay文の列が構成可能であることを示すことである．
+
+\printbibliography
 
 \end{document}
