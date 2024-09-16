@@ -1,0 +1,18 @@
+# Nix
+.direnv
+result
+
+# TeX
+*.aux
+*.dvi
+*.fdb_latexmk
+*.fls
+*.log
+
+# VSCode
+# .vscode/settings.json
+
+# misc
+temp
+
+*.pdf
