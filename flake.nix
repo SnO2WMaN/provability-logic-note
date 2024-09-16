@@ -23,15 +23,32 @@
           inherit system;
           overlays = [ devshell.overlays.default ];
         };
+        texlive-pkgs =
+          with pkgs;
+          texlive.combine {
+            inherit (texlive) scheme-full platex-tools ipaex;
+          };
       in
-      {
+      rec {
+        packages = {
+          document =
+            pkgs.runCommand "run-latexmk"
+              {
+                buildInputs = [ texlive-pkgs ];
+                src = ./.;
+              }
+              ''
+                cp -r $src/* ./
+                cp -r $src/.latexmkrc ./.latexmkrc
+                latexmk ./main.tex
+                mkdir $out
+                cp ./main.pdf $out/main.pdf
+              '';
+          default = packages.document;
+        };
         formatter = pkgs.nixfmt-rfc-style;
         devShells.default = pkgs.devshell.mkShell {
-          packages = with pkgs; [
-            (texlive.combine {
-              inherit (texlive) scheme-full platex-tools ipaex;
-            })
-          ];
+          packages = [ texlive-pkgs ];
         };
       }
     );
