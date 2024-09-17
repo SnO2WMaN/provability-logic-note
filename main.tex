@@ -8,19 +8,21 @@
 
 \newcommand*{\Lang}[1]{\mathcal{L}_\mathrm{#1}}
 \newcommand*{\LangA}{\Lang{A}}
-\newcommand*{\LangML}{\Lang{ML}}
+\newcommand*{\LangM}{\Lang{M}}
 
 \newcommand*{\Logic}[1]{\mathbf{#1}}
 \newcommand*{\LogicGL}{\Logic{GL}}
 
 \newcommand*{\Prop}{\mathrm{Prop}}
-\newcommand*{\MF}{\mathrm{MF}}
+\newcommand*{\Form}{\mathrm{Form}}
+\newcommand*{\Sent}{\mathrm{Sent}}
 \newcommand*{\Provable}{\mathrm{Pr}}
  
 \theoremstyle{definition}
 \newtheorem{theorem}{定理}[section]
 \newtheorem{lemma}[theorem]{補題}
 \newtheorem{definition}[theorem]{定義}
+\newtheorem{notation}[theorem]{表記}
 \newtheorem{remark}[theorem]{注意}
 \newtheorem{example}[theorem]{例}
 
@@ -60,11 +62,15 @@
 
 定義と，基本的な事実を確認する．
 
+\begin{notation}
+    自然数全体の集合は $\omega$ で表す．
+\end{notation}
+
 \subsection{不完全性定理}
 
-\begin{remark}
+\begin{notation}
     一般の算術の文については $\sigma, \pi, \dots$ のようにギリシャ文字で表すことにする．
-\end{remark}
+\end{notation}
 
 \begin{definition}
     $n \leq 1$ に対し，
@@ -74,12 +80,12 @@
 
 \subsection{様相論理}
 
-\begin{remark}
+\begin{notation}
     一般の様相論理式は $A,B,C,\dots$ のように普通のラテンアルファベットを用いて表すことにする．
-\end{remark}
+\end{notation}
 
 \begin{definition}
-    $\Box^n A$ を再帰的に以下のように定める．
+    $n \in \omega$ とする．$\Box^n A$ を再帰的に以下のように定める．
     \begin{itemize}
         \item $\Box^0 A \equiv A$
         \item $\Box^{n+1} A \equiv \Box \Box^n A$
@@ -94,14 +100,14 @@
 
 \begin{remark}
     一般に $d(w)$ は自然数を取るとは限らない．
-    例えば $R$ が反射的ならば，$w R w_0 R w_1 R w_0 \cdots$ として任意の長さの列が存在しうるため，$d(w) = \infty$ となりうる．
+    例えば $R$ が反射的ならば，$w R w_0 R w_0 \cdots$ のようなループによって任意の長さの列が存在して $d(w) = \infty$ となりうる．
 
-    しかし，$\LogicGL$ 有限木モデルは非反射的なのでそのような場合は考えなくてよく，そのため $d(w)$ は有限として考えてよい．
-    以下では $d(w) \in \omega$ とする．
+    ただし，$\LogicGL$ 有限木モデルは非反射的なのでそのような場合は考えなくてよく，そのため $d(w)$ は有限として考えてよい．
 \end{remark}
 
 \begin{lemma}\label{lem:cannot_access}
-    $d(w) \leq n$ ならば $M,w \vDash \Box^{n + 1} A$
+    $d(w), n \in \omega$ とする．
+    $d(w) \leq n$ ならば $M,w \vDash \Box^{n + 1} A$．
 \end{lemma}
 
 \begin{proof}
@@ -140,11 +146,12 @@
 \end{remark}
 
 \begin{definition}
-    命題変数から算術の文への写像 $* \colon \Prop \to \LangA$ を解釈と呼ぶ．
+    様相論理の命題変数から算術の文への写像 $* \colon \Prop_{\LangM} \to \Sent_{\LangA}$ を解釈と呼ぶ．
 \end{definition}
 
 \begin{definition}
-    解釈 $f$ と理論 $T$ の証明可能性述語 $\Provable_T$ に対して，以下のように定義域が様相論理式一般に拡張される写像 $*_{\Provable_T} \colon \MF \to \LangA$ を変換と呼ぶ．
+    解釈 $f$ と理論 $T$ の証明可能性述語 $\Provable_T$ に対して，
+    以下のように定義域が様相論理式一般に拡張された写像 $*_{\Provable_T} \colon \Form_{\LangM} \to \Sent_{\LangA}$ を変換と呼ぶ．
     ただし読みづらいため，文脈上 $\Provable_T$ が明らかな場合は解釈の記号と同様に $*$ として記号を濫用することにする．
 \end{definition}
 
@@ -158,7 +165,7 @@
 
 \section{$\LogicGL$ の算術的完全性定理}
 
-Solovayは証明可能性論理の出発点である次の定理を示した．この節ではその証明を追っていく．
+Solovay\cite{solovay_provability_1976}は証明可能性論理の出発点である次の定理を示した．この章ではその証明を追っていく．
 
 \begin{theorem}[$\LogicGL$ の算術的完全性定理 \cite*{solovay_provability_1976}]\label{thm:GL_arith_completeness}
     $\Provable_T$ は $T$ の標準的な証明可能性とし，
@@ -179,12 +186,12 @@ Solovayは証明可能性論理の出発点である次の定理を示した．�
 
 \begin{definition}
     $M = (W = \{0,1,\dots,n\}, 0, R, \Vdash)$ に対し，以下の4条件を満たす $n + 1$ 個の文の列 $\beta_0, \beta_1, \dots, \beta_n$ を $M$ のSolovay文の列と呼ぶ．
-    \begin{itemize}
+    \begin{enumerate}
         \item $T \vdash \bigvee_{i \in W} \beta_i$
         \item $i \neq j$ ならば $T \vdash \beta_i \to \lnot \beta_j$
         \item $i \neq 0$ ならば $T \vdash \beta_i \to \Provable_T(\ulcorner \bigvee_{i R j} \beta_j \urcorner)$
         \item $i R j$ ならば $T \vdash \beta_i \to \lnot \Provable_T(\ulcorner \lnot \beta_j \urcorner)$ 
-    \end{itemize}
+    \end{enumerate}
 \end{definition}
 
 \begin{remark}
@@ -196,7 +203,7 @@ Solovayは証明可能性論理の出発点である次の定理を示した．�
 
 \begin{definition}
     $\beta_0, \beta_1, \dots, \beta_n$ を $M$ のSolovay文の列とする．
-    $p^* \equiv \bigvee_{i \in W \\ M, i \Vdash p} \beta_i$ として定義される解釈 $*$ をSolovay解釈と呼ぶ．
+    $p^* \equiv \bigvee_{\substack{i \in W \\ M, i \Vdash p}} \beta_i$ として定義される解釈 $*$ をSolovay解釈と呼ぶ．
 \end{definition}
 
 Solovay解釈の性質として重要なのが次の補題である．
@@ -208,21 +215,56 @@ Solovay解釈の性質として重要なのが次の補題である．
         \item $M, i \nvDash B \implies T \vdash \beta_i \to \lnot B^*$
     \end{enumerate}
 \end{lemma}
+\begin{proof}
+    $B$ の構成についての帰納法で同時に示す．
+    \begin{itemize}
+        \item 
+            $B \equiv p$ とする．
+            \begin{enumerate}
+                \item 
+                $i \vDash p$ のとき，$T \vdash \beta_i \to \bigvee_{j \Vdash p} \beta_j $ を示せば良いが，これは明らか．
+                \item 
+                $i \nvDash p$ のとき $T \vdash \beta_i \to \lnot \bigvee_{j \Vdash p} \beta_j$ を示す．
+                これは $T \vdash \beta_i \to \bigwedge_{j \Vdash p} \lnot \beta_j$ と同値である． 
+            \end{enumerate}
+        \item $B \equiv \bot$ のときは明らか．
+        \item $B \equiv C \to D$ のときは帰納法の仮定を用いて明らか．
+        \item 
+            $B \equiv \Box C$ のとき．
+            \begin{enumerate}
+                \item 
+                $i \vDash \Box C$ のとき，任意の $i R j$ な $j$ で $M, j \vDash C$ である．
+                帰納法の仮定より $T \vdash \beta_j \to C^*$ であるので，$T \vdash \bigvee_{i R j} \beta_j \to C^*$．
+                D1とD2より $T \vdash \Provable(\ulcorner \bigvee_{i R j} \beta_j \urcorner) \to \Provable(\ulcorner C^* \urcorner)$．
+                S3より $T \vdash \beta_i \to \Provable_T(\ulcorner \bigvee_{i R j} \beta_j \urcorner)$ だったから，
+                合わせて $T \vdash \beta_i \to \Provable_T(\ulcorner C^* \urcorner)$ を得る．
+                これは $T \vdash \beta_i \to (\Box C)^*$ である．
+                \item
+                $i \nvDash \Box C$ のとき，ある $i R j$ な $j$ で $M, j \vDash C$ である．
+                帰納法の仮定より $T \vdash \beta_j \to \lnot C^*$ であり，対偶を取れば $T \vdash C^* \to \lnot \beta_j$ である．
+                D1とD2より $T \vdash \Provable_T(\ulcorner C^* \urcorner) \to \Provable_T(\ulcorner \lnot \beta_j \urcorner)$．
+                ここでS4の対偶より $T \vdash \Provable_T(\ulcorner \lnot \beta_j \urcorner) \to \lnot \beta_i$ であるから，
+                合わせて $T \vdash \Provable_T(\ulcorner C^* \urcorner) \to \lnot \beta_i$ を得る．
+                これは $T \vdash (\Box C)^* \to \lnot \beta_i$ であり，対偶を取れば $T \vdash \beta_i \to \lnot (\Box C)^*$ となる．
+            \end{enumerate}
+    \end{itemize}
+    \qed
+\end{proof}
 
-さて定理\ref{thm:GL_arith_completeness}の証明が出来る
+さて定理\ref{thm:GL_arith_completeness}の証明が出来る．
 
 \begin{proof}[定理\ref{thm:GL_arith_completeness}の証明(2/3)]
     $M,1 \nvDash A$ だった．$M$ の単純拡張モデル $M' = (W', R', \Vdash')$ とすると補題\ref{lem:simple_extension}より $M',1 \nvDash A$ でもある．
     $M'$ に対してのSolovay文 $\beta_0, \beta_1, \dots, \beta_n$ を構成し，$*$ はSolovay解釈とする．
     補題\ref{lem:solovay_interpretation}より $T \vdash \beta_1 \to \lnot A^*$ を得て，対偶を取れば $T \vdash A^* \to \beta_1$ が得られる．
 
-    今，仮に $T \vdash A^*$ とすると議論が破綻することを示す．
+    今，仮に $T \vdash A^*$ と仮定すると議論が破綻することを示す．
     
-    先ほど得た論理式より $T \vdash \beta_1$ であり，更に導出可能性条件 D1 より $T \vdash \Provable_T(\ulcorner \beta_1 \urcorner)$ が得られる．
-    一方，単純拡張なので $0 R' 1$ であるからdより $T \vdash \beta_0 \to \lnot \Provable_T(\ulcorner \beta_1 \urcorner)$ であり，
+    先ほどと合わせると $T \vdash \beta_1$ であり，更に導出可能性条件 D1 より $T \vdash \Provable_T(\ulcorner \beta_1 \urcorner)$ が得られる．
+    一方，$M$ が単純拡張モデルなので $0 R' 1$ であるからS4より $T \vdash \beta_0 \to \lnot \Provable_T(\ulcorner \beta_1 \urcorner)$ であり，
     対偶を取れば $T \vdash \Provable_T(\ulcorner \beta_1 \urcorner) \to \lnot \beta_0$ が得られる．
     これらを合わせると $T \vdash \lnot \beta_0$ が得られる．
-    したがって a より $T \vdash \bigvee_{i \in W \setminus \{0\}} \beta_i$ である． 
+    したがってS1より $T \vdash \bigvee_{i \in W \setminus \{0\}} \beta_i$ である． 
 
     $i \in W'$ かつ $i \neq 0$ としたとき，$d(i) \leq d(1)$ である．したがって補題 \ref{lem:cannot_access}より
     $M',i \vDash \Box^{d(1) + 1} \bot$ が得られる．
@@ -230,12 +272,14 @@ Solovay解釈の性質として重要なのが次の補題である．
     これはすなわち $T \vdash \beta_{i} \to \Provable^{d(1) + 1}_T(\ulcorner \bot \urcorner)$ である．
 
     $T \vdash \bigvee_{i \in W \setminus \{0\}} \beta_i$ と合わせると $T \vdash \Provable^{d(1) + 1}_T(\ulcorner \bot \urcorner)$ を得る．
-    $\Provable^{d(1) + 1}_T(\ulcorner \bot \urcorner)$ は $\Sigma_1$ 文であり，$\Sigma_1$ 健全性より $T \vdash \bot$ が言える．
+    $\Provable^{d(1) + 1}_T(\ulcorner \bot \urcorner)$ は $\Sigma_1$ 文であるから，$\Sigma_1$ 健全性より $T \vdash \bot$ が言える．
     しかしこれはおかしい．よって仮定がおかしく，$T \nvdash A^*$ である．
     \qed
 \end{proof}
 
 残ったのはSolovay文の列が構成可能であることを示すことである．
+
+\subsection{Solovay文の列の構成}
 
 \printbibliography
 
