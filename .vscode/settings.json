@@ -1,0 +1,56 @@
+{
+	"[latex]": {
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "James-Yu.latex-workshop",
+	},
+	"nix.formatterPath": "nixfmt",
+	"latex-workshop.view.pdf.viewer": "tab",
+	"latex-workshop.latex.autoBuild.run": "onFileChange",
+	"latex-workshop.synctex.afterBuild.enabled": true,
+	"latex-workshop.latex.autoClean.run": "onFailed",
+	"latex-workshop.latex.clean.fileTypes": [
+		"*.aux",
+		"*.bbl",
+		"*.blg",
+		"*.idx",
+		"*.ind",
+		"*.lof",
+		"*.lot",
+		"*.out",
+		"*.toc",
+		"*.acn",
+		"*.acr",
+		"*.alg",
+		"*.glg",
+		"*.glo",
+		"*.gls",
+		"*.ist",
+		"*.fls",
+		"*.log",
+		"*.fdb_latexmk",
+		"*.synctex.gz",
+		"_minted*",
+		"*.nav",
+		"*.snm",
+		"*.vrb",
+	],
+	"latex-workshop.latex.tools": [
+		{
+			"name": "latexmk",
+			"command": "latexmk",
+			"args": [
+				"-pdfdvi",
+				"%DOC%",
+			],
+		},
+	],
+	"latex-workshop.latex.recipes": [
+		{
+			"name": "latexmk",
+			"tools": [
+				"latexmk",
+			]
+		},
+	],
+	"latex-workshop.formatting.latex": "latexindent",
+}

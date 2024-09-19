@@ -13,9 +13,7 @@ result
 *.bcf
 *.blg
 *.run.xml
-
-# VSCode
-.vscode/settings.json
+*.synctex.gz
 
 # misc
 temp

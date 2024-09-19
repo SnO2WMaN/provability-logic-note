@@ -3,13 +3,11 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     devshell.url = "github:numtide/devshell";
-    texshell.url = "github:jorsn/texshell.nix";
   };
 
   outputs =
     {
       nixpkgs,
-      texshell,
       flake-utils,
       devshell,
       self,
@@ -18,16 +16,13 @@
     flake-utils.lib.eachSystem [ "x86_64-linux" ] (
       system:
       let
-        inherit (pkgs) ;
+        inherit (pkgs)
+          ;
         pkgs = import nixpkgs {
           inherit system;
           overlays = [ devshell.overlays.default ];
         };
-        texlive-pkgs =
-          with pkgs;
-          texlive.combine {
-            inherit (texlive) scheme-full platex-tools ipaex;
-          };
+        texlive-pkgs = with pkgs; texlive.combine { inherit (texlive) scheme-full platex-tools ipaex; };
       in
       rec {
         packages = {
@@ -48,7 +43,10 @@
         };
         formatter = pkgs.nixfmt-rfc-style;
         devShells.default = pkgs.devshell.mkShell {
-          packages = [ texlive-pkgs ];
+          packages = with pkgs; [
+            texlive-pkgs
+            nixfmt-rfc-style
+          ];
         };
       }
     );
