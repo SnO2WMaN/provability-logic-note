@@ -3,24 +3,52 @@
 \usepackage{amssymb}
 \usepackage{amsfonts}
 \usepackage{amsthm}
-\usepackage[backend=biber]{biblatex}
+
+\usepackage[backend=biber,style=alphabetic,url=false]{biblatex}
 \addbibresource{main.bib}
+
+\usepackage{makeidx}
+\makeindex 
 
 \newcommand*{\Lang}[1]{\mathcal{L}_\mathrm{#1}}
 \newcommand*{\LangA}{\Lang{A}}
 \newcommand*{\LangM}{\Lang{M}}
 
+\newcommand*{\Ax}[1]{\mathsf{#1}}
+\newcommand*{\AxK}{\Ax{K}}
+\newcommand*{\AxT}{\Ax{T}}
+\newcommand*{\AxTc}{\Ax{Tc}}
+\newcommand*{\AxFour}{\Ax{4}}
+\newcommand*{\AxFive}{\Ax{5}}
+\newcommand*{\AxD}{\Ax{D}} 
+\newcommand*{\AxL}{\Ax{L}}
+\newcommand*{\AxGrz}{\Ax{Grz}}
+
 \newcommand*{\Logic}[1]{\mathbf{#1}}
+\newcommand*{\LogicK}{\Logic{K}}
+\newcommand*{\LogicKT}{\Logic{KT}}
 \newcommand*{\LogicGL}{\Logic{GL}}
 \newcommand*{\LogicGLS}{\Logic{GLS}}
 \newcommand*{\LogicGrz}{\Logic{Grz}}
 \newcommand*{\LogicD}{\Logic{D}}
+\newcommand*{\LogicSFour}{\Logic{S4}}
+\newcommand*{\LogicSFive}{\Logic{S5}}
+\newcommand*{\LogicSFourGrz}{\Logic{S4Grz}}
+\newcommand*{\LogicSFiveGrz}{\Logic{S5Grz}}
+\newcommand*{\LogicInt}{\Logic{Int}}
+\newcommand*{\LogicCl}{\Logic{Cl}}
 
 \newcommand*{\Prop}{\mathrm{Prop}}
 \newcommand*{\Form}{\mathrm{Form}}
 \newcommand*{\Sent}{\mathrm{Sent}}
 \newcommand*{\Provable}{\mathrm{Pr}}
  
+\newcommand*{\FrameClass}{\mathbb{F}}
+\newcommand*{\FrameClassOf}[1]{\FrameClass_{#1}}
+
+\newcommand*{\Sub}[1]{\mathrm{Sub}(#1)}
+\newcommand*{\structure}[1]{\langle #1 \rangle}
+
 \theoremstyle{definition}
 \newtheorem{theorem}{定理}[section]
 \newtheorem{lemma}[theorem]{補題}
@@ -28,6 +56,7 @@
 \newtheorem{notation}[theorem]{表記}
 \newtheorem{remark}[theorem]{注意}
 \newtheorem{example}[theorem]{例}
+\newtheorem{corollary}[theorem]{系}
 
 \newtheorem*{theorem*}{定理}
 \newtheorem*{lemma*}{補題}
@@ -48,7 +77,6 @@
 }
 \makeatother
 
-
 \title{算術的完全性定理}
 \author{Mateusz Zunderewski}
 \date{\today}
@@ -60,6 +88,13 @@
 \begin{abstract}
 	この文書では主に $\LogicGL$ のSolovayの算術的完全性定理について述べる．
 \end{abstract}
+
+\setcounter{tocdepth}{3}
+\tableofcontents
+
+\pagebreak
+
+\cite{数学基礎論増補版,数学における証明と真理}などを大いに参考にした．
 
 \section{準備}
 
@@ -97,37 +132,49 @@
 
 
 \begin{definition}
-	$M = (W, R, \Vdash)$ をKripkeモデル，$w \in W$ とする．
-	$w$ を始点とした $w R w_1 R w_2 \cdots$ という列で最長な列の長さを $d(w)$ とする．
+	$F = \structure{W, R}$ をKripkeモデル，$x \in W$ とする．
+	「$x$ から最大で何回遷移可能か」を表す順序数 $d(x)$ を以下のように定める．
+	\begin{itemize}
+		\item $d(x) = \max \{ n \in \omega \mid \exists y \in W \colon w R^n y \}$
+		\item ただし $\{ n \in \omega \mid \exists y \in W \colon w R^n y \} = \omega$ のとき，$d(x) = \omega$ とする．
+	\end{itemize}
 \end{definition}
 
 \begin{remark}
-	一般に $d(w)$ は自然数を取るとは限らない．
-	例えば $R$ が反射的ならば，$w R w_0 R w_0 \cdots$ のようなループによって任意の長さの列が存在して $d(w) = \infty$ となりうる．
+	定義より明らかだが，$d(x)$ が一般に自然数を取るとは限らない．
+	例えば $W$ が無限であれば任意の $n \in \omega$ に対して $x R^n y$ となる $y$ を取ってこれるかもしれないし，
+	仮に $W$ が有限だとしても $R$ が反射的ならば $x R x R x \cdots$ のようなループによって任意の $n \in \omega$ で $x R^n x$ かもしれない．
 
-	ただし，$\LogicGL$ 有限木モデルは非反射的なのでそのような場合は考えなくてよく，そのため $d(w)$ は有限として考えてよい．
+	ただし，特殊な構造を持つフレームに対しては $d(x)$ は各 $x$ で常に自然数となることが保証できる．
 \end{remark}
 
+何回遷移できるかが有限で抑えられるなら，次の補題\ref{lem:cannot_access}が成り立つ．
+
 \begin{lemma}\label{lem:cannot_access}
-	$d(w), n \in \omega$ とする．
-	$d(w) \leq n$ ならば $M,w \vDash \Box^{n + 1} A$．
+	$d(x), n \in \omega$ とする．
+	$d(x) \leq n$ ならば $M,x \vDash \Box^{n + 1} A$．
 \end{lemma}
 
 \begin{proof}
-	直感的には $d(w) \leq n$ ということは $w R^{n + 1} w'$ となる $w'$ が存在しないということを踏まえればほとんど明らか．
-	厳密な証明は $n$ についての帰納法を用いて示せばよい．
+	厳密な証明は $n$ についての帰納法を用いて示せばよいが，
+	直感的には $d(x) \leq n$ ということは $x R^{n + 1} y$ となる $y$ が存在しないということを考えれば明らか．
 	\qed
 \end{proof}
 
-\subsection{$\LogicGL$ について}
+\subsubsection{$\LogicGL$ について}
+
+\begin{definition}
+	公理図式 $\AxL \equiv \Box(\Box A \to A) \to \Box A$ とする．\index{$\AxL$}
+	$\LogicK \oplus \AxL$ を $\LogicGL$ と定義する．\index{$\LogicGL$}
+\end{definition}
 
 \begin{definition}
 	有限 $\LogicGL$ 木モデル $M = (W = \{w_1,\dots,w_n\}, w_1, R, \Vdash)$ に対して，
-	根から下に新しく $w_0$ を生やして拡張した有限木 $\LogicGL$ モデル $(W' = \{w_0,w_1,\dots,w_n\}, w_0, R', \Vdash')$ を $M$ の単純拡張モデルと呼ぶ．
+	根から下に新しく $w_0$ を生やして拡張した有限木 $\LogicGL$ モデル $(y = \{w_0,w_1,\dots,w_n\}, w_0, R', \Vdash')$ を $M$ の単純拡張モデルと呼ぶ．
 
 	よりきちんと定義すると以下のとおりで，これは有限木 $\LogicGL$ モデルとなる．
 	\begin{itemize}
-		\item $W' = W \cup \{w_0\}$
+		\item $y = W \cup \{w_0\}$
 		\item $R' = R \cup \{(w_0,w_i) \mid w_i \in W\}$
 		\item $w \in W$ について $w \Vdash' p \iff w \Vdash p$
 		\item $w_0 \Vdash' p \iff w_1 \Vdash p$
@@ -142,19 +189,288 @@
 	\qed
 \end{proof}
 
-\subsection{算術的解釈}
+\subsubsection{$\LogicGrz$ について}
+
+\begin{definition}
+	公理図式 $\AxGrz \equiv \Box(\Box(A \to \Box A) \to A) \to A$ \index{$\AxGrz$} とする．
+	$\LogicK \oplus \AxGrz$ を $\LogicGrz$ と定義する．\index{$\LogicGrz$}
+\end{definition}
+
+\begin{lemma}
+	$\LogicGrz \vdash \AxT$ および，$\LogicGrz \vdash \AxFour$．
+\end{lemma}
+
+よって直ちに次が成り立つ．
+
+\begin{corollary}\label{cor:S4_weakerThan_Grz}
+	$\LogicSFour \leq \LogicGrz$．
+	また $\LogicSFourGrz = \LogicSFour \oplus \AxGrz$ として $\LogicSFourGrz = \LogicGrz$．
+\end{corollary}
+
+\begin{remark}
+	$\LogicSFour$ およびその拡張に対して $\AxGrz$ という公理を追加した論理は，
+	\ref{sect:modal_copanion}節で考えるModal Companionという概念で重要となる．
+\end{remark}
+
+\begin{lemma}
+	$F \vDash \AxGrz$ ならば $F \vDash \AxT$ かつ $F \vDash \AxFour$ である．
+\end{lemma}
+
+したがって $\AxT$ と $\AxFour$ のフレーム定義性より，直ちに次の系が得られる．
+
+\begin{corollary}
+	$F \vDash \AxGrz$ ならば $F$ は反射的かつ推移的．
+\end{corollary}
+
+\begin{definition}
+	$\Logic{\Lambda}$ は様相論理とし，$\FrameClass$ は空でないフレームクラスとする．
+	\begin{enumerate}
+		\item
+		      任意の $F$ で $F \in \FrameClass \implies F \in \FrameClassOf{\Logic{\Lambda}} $ のとき，
+		      $\FrameClassOf{\Logic{\Lambda}}$ は $\FrameClass$ によって特徴づけられるという．
+		\item
+		      任意の $F$ で $F \in \FrameClass \iff F \in \FrameClassOf{\Logic{\Lambda}} $ のとき，
+		      $\FrameClassOf{\Logic{\Lambda}}$ は $\FrameClass$ によって定義されるという．
+	\end{enumerate}
+\end{definition}
+
+\begin{corollary} \label{cor:LogicGrz_definedBy}
+	$\FrameClassOf{\LogicGrz}$ は反射的，推移的，弱逆整礎的なフレームのクラスによって定義される．
+\end{corollary}
+
+\begin{lemma}\label{lem:wcwf_of_finite_trans_antisymm}
+	$W$ 上の2項関係 $R$ について，$W$ が有限かつ $R$ が推移的かつ反対称的ならば $W$ は弱逆整礎的である．
+\end{lemma}
+
+系\ref{cor:LogicGrz_definedBy}と補題\ref{lem:wcwf_of_finite_trans_antisymm}より，$\LogicGL$ のときと同様に使いやすい次の系が得られる．
+\begin{corollary}
+	$\LogicGrz$ は反射的，推移的，反対称的な有限フレームクラスによって定義される．
+\end{corollary}
+
+\subsubsection{$\LogicGrz$ のKripke完全性}
+
+基本的には $\LogicGL$ のKripke完全性証明と同じように行い，コンプリートモデルの構成も同様に行う．
+
+\newcommand*{\GrzSub}[1]{\mathrm{Sub}^G(#1)}
+
+\begin{definition}
+	有限集合 $\GrzSub{A} := \Sub{A} \cup \{ \Box(\Box \to \Box A) \mid A \in \Sub{A} \}$ と定義する．
+\end{definition}
+
+\begin{definition}
+	$X, S$ は有限集合とする．
+	任意の $A \in S$ に対して $A \in X$ または $-A \in X$ であるとき，$X$ が $S$ に対して補で閉じているという．
+
+	$X$ が $S$ に対して補で閉じて $\Logic{\Lambda}$ 無矛盾な論理式の有限集合であるとき，簡潔にCCF\index{CCF}と呼ぶことにする．
+\end{definition}
+
+\begin{lemma}
+	$S$ に対してのCCFはたかだか有限個しか存在しない．
+\end{lemma}
+
+$\LogicGL$ と同じように，CCFによって有限コンプリートモデルを構成する．
+\begin{definition}
+	$A$ に対しての $\LogicGrz$ 有限コンプリートフレーム $F_{\LogicGrz, A} := \structure{W_{\LogicGrz, A}, R_{\LogicGrz, A}}$ を以下のように定義する．
+\end{definition}
+
+\begin{lemma}
+	$F_{\LogicGrz, A}$ は反射的，推移的，反対称的．
+\end{lemma}
+
+\begin{definition}
+	$M_{\LogicGrz, A} := \structure{F_{\LogicGrz, A}, \Vdash_{\LogicGrz, A}}$ を $A$ に対しての $\LogicGrz$ 有限コンプリートモデルという．
+	ただし，$w \Vdash_{\LogicGrz, A} p \iff p \in W$ とする．
+\end{definition}
+
+やはり $\LogicGL$ と同様に真理補題が成り立つ．その前にいくつかの補題を示す．
+
+\begin{lemma}\label{lem:Grz_truthlemma}
+	$B \in \Sub{A}$ とする．
+	$M_{\LogicGrz, A}, X \vDash B \iff B \in X$．
+\end{lemma}
+
+ここまでくれば，あとは $\LogicGL$ と同じように完全性を示すことが出来る．
+
+\begin{theorem}
+	$\LogicGrz$ は反射的，推移的，反対称的な有限フレームクラスに対してKripke完全．
+\end{theorem}
+
+よって直ちに次のこともわかる．
+
+\begin{corollary}
+	$\LogicGrz$ は有限フレーム性を持ち，したがって決定可能．
+\end{corollary}
+
+\subsubsection{Boxdot Companion}
+
+\begin{definition}
+	$\boxdot A \equiv A \land \Box A$ とする．
+\end{definition}
+
+\begin{definition}[Boxdot変換]
+	$A^\boxdot$ は $A$ の中に現れる $\Box$ を全て $\boxdot$ で置き換えた論理式とし，その変換 $\cdot^\boxdot$ をBoxdot変換\index{Boxdot変換}と呼ぶ．
+	もう少し厳密に書けば，以下のように再帰的に定義される．
+\end{definition}
+
+\begin{definition}
+	様相論理 $\Logic{\Lambda_1}$ が $\Logic{\Lambda_2}$ のBoxdot Companionであるとは，
+	任意の様相論理式 $A$ に対して $\Logic{\Lambda_1} \vdash A \iff \Logic{\Lambda_2} \vdash A^\boxdot$ が成り立つことである．
+\end{definition}
+
+本節では証明可能性論理という面でやや重要な事実である，$\LogicGrz$ が $\LogicGL$ のBoxdot Companionであること(定理\ref{thm:Grz_GL_BoxdotCompanion})を示す．
+なお，他の論理に対するもっと一般的な結果が\cite*{jerabek_cluster_2016}によって示されている．
+
+片側である補題\ref{lem:Grz_GL_BoxdotCompanion_1}はKripke意味論を用いて示す．
+
+\begin{lemma}\label{lem:Grz_GL_BoxdotCompanion_1}
+	$\LogicGL \vdash A^\boxdot \implies \LogicGrz \vdash A$
+\end{lemma}
+
+\newcommand*{\reflexv}[1]{#1^{=}}
+\newcommand*{\irreflxv}[1]{#1^{\neq}}
+
+\begin{definition}
+	$F = \structure{W, R}$ はKripkeフレームとする．
+	\begin{enumerate}
+		\item $F$ の反射化\index{はんしゃか@反射化} $\reflexv{F} := R \cup \{ (x, x) \in x \in W\}$ とする．
+		\item $F$ の非反射化\index{ひはんしゃか@非反射化} $\irreflxv{F} := \{(x,y) \in R \mid x \neq y \}$ とする．
+	\end{enumerate}
+\end{definition}
+
+\begin{lemma}
+	$F = \structure{W, R}$ をKripkeフレーム，$\Vdash$ を付値，$x \in W$，$A$ は任意の様相論理式とする．
+
+	$\structure{F, \Vdash}, x \vDash A^\boxdot \iff \structure{\reflexv{F}, \Vdash}, x \vDash A$
+\end{lemma}
+
+\begin{proof}
+	$A$ の構造に対する帰納法で示す．自明ではないのは $A \equiv \Box B$ のときだけなのでそれだけ示せば十分．
+\end{proof}
+
+\begin{corollary}
+	$F$ をKripkeフレーム，$A$ は任意の様相論理式とすれば $F \vDash A^\boxdot \iff \reflexv{F} \vDash A^\boxdot$
+\end{corollary}
+
+\begin{lemma}
+	$F = \structure{W, R}$ を反射的なKripkeフレーム，$\Vdash$ を付値，$x \in W$，$A$ は任意の様相論理式とする．
+	$\structure{F,\Vdash}, x \vDash A \iff \structure{\reflexv{(\irreflxv{F})}, \Vdash}, x \vDash A$．
+\end{lemma}
+
+
+もう片側である補題\ref{lem:Grz_GL_BoxdotCompanion_2}もKripke意味論を用いた議論で示すことが出来るが，
+こちらには構文論的な議論のみで示す非常にパズル的な証明\cite[pp163-164]{boolos_logic_1994}が知られている．
+
+\begin{lemma}\label{lem:Grz_GL_BoxdotCompanion_2}
+	$\LogicGrz \vdash A \implies \LogicGL \vdash A^\boxdot$
+\end{lemma}
+
+
+こうして補題\ref{lem:Grz_GL_BoxdotCompanion_1}と補題\ref{lem:Grz_GL_BoxdotCompanion_2}より，
+直ちに $\LogicGrz$ が $\LogicGL$ のBoxdot Companionであることがわかる．
+
+\begin{theorem}\label{thm:Grz_GL_BoxdotCompanion}
+	$\LogicGrz$ は $\LogicGL$ のBoxdot Companion である．
+\end{theorem}
+
+
+\subsubsection{Modal Companion}\label{sect:modal_copanion}
+
+この節では公理 $\AxGrz$ のもう一つの側面であるModal Companionという概念について述べる．
+Modal Companionのより発展的な話題については\cite*{chagrov_modal_1992}を参照されたい．
+
+\begin{definition}[Gödel変換]\index{げーでるへんかん@Gödel変換}
+	命題論理式を様相論理式へ写すGödel変換 $\cdot^G$ という操作を以下のように定義する．
+\end{definition}
+
+直観主義命題論理 $\LogicInt$ と様相論理 $\LogicSFour$ について次の定理\ref{thm:GMT}が知られている．
+
+\begin{theorem}[Gödel-McKinsey-Tarskiの定理\cite*{godel_interpretation_1933,mckinsey_theorems_1948}]\label{thm:GMT}
+	\begin{equation*}
+		\LogicInt \vdash A \iff \LogicSFour \vdash A^G
+	\end{equation*}
+\end{theorem}
+
+定理\ref{thm:GMT}をより一般化した関係を考える．
+
+\begin{definition}[中間論理]\index{ちゅうかんろんり@中間論理}
+	直観主義命題論理 $\LogicInt$ と古典命題論理 $\LogicCl$ の間の強さの論理を中間論理と呼ぶ．
+	ただし $\LogicInt$ と $\LogicCl$ も中間論理に含める．
+	すなわち，命題論理 $\Logic{I\Lambda}$ が中間論理とは $\LogicInt \leq \Logic{I\Lambda} \leq \LogicCl$ が成り立つことである．
+\end{definition}
+
+\begin{definition}[Modal Companion]\index{Modal Companion}
+	様相論理 $\Logic{M\Lambda}$ が中間論理 $\Logic{I\Lambda}$ のModal Companionであるとは，
+	任意の様相論理式 $A$ に対して以下が成り立つこととする．
+	\begin{equation*}
+		\Logic{I\Lambda} \vdash A \iff \Logic{M\Lambda} \vdash A^G
+	\end{equation*}
+\end{definition}
+
+この定義よりGödel-McKensey-Tarskiの定理は「$\LogicSFour$ は $\LogicInt$ のModal Companionである」とも言い換えられる．
+
+
+系\ref{cor:S4_weakerThan_Grz}より $\LogicSFourGrz \vdash A \iff \LogicGrz \vdash A \implies \LogicSFour \vdash A$ であるから，
+$\LogicSFourGrz \vdash A^G \implies \LogicInt \vdash A$ が成り立つ．
+実はこの逆も成り立つことがわかっているため，次のことが成り立つ．
+
+\begin{theorem}[\cite*{grzegorczyk_relational_1969}]
+	$\LogicSFourGrz$ も $\LogicInt$ のModal Companionである．
+\end{theorem}
+
+よって $\LogicInt$ のModal Companionとなる様相論理は複数存在する．
+そしてこれは $\LogicInt$ だけに限らず一般の中間論理に対しても同様に，なおかつ次の強い主張が成り立つことも知られている．
+
+\begin{theorem}[\cite*{maksimova_lattice_1974}]
+	任意の中間論理 $\Logic{I\Lambda}$ のModal Companionは無限個存在し，かつ $\leq$ によって束を形成する．
+\end{theorem}
+
+そのような束の下限と上限，つまり各論理のModal Companionの中で最弱と最強の論理を考えたい．
+
+\begin{definition}
+	中間論理 $\Logic{I\Lambda}$ とし，その任意のModal Companionを $\Logic{M\Lambda}$ とする．
+
+	\begin{enumerate}
+		\item
+		      $\tau\Logic{I\Lambda} \leq \Logic{M\Lambda}$ が成り立つような
+		      最弱の $\Logic{I\Lambda}$ のModal Companionを $\tau\Logic{I\Lambda}$ とする．
+		\item
+		      $\Logic{M\Lambda} \leq \sigma\Logic{I\Lambda}$ が成り立つような
+		      最強の $\Logic{I\Lambda}$ のModal Companionを $\sigma\Logic{I\Lambda}$ とする．
+	\end{enumerate}
+\end{definition}
+
+\begin{theorem}[\cite*{dummett_modal_1959}]
+	中間論理 $\Logic{I\Lambda}$ に対して，$\tau \Logic{I\Lambda} = \LogicSFour \oplus \{ A^G \mid \Logic{I\Lambda} \vdash A \} $ である．
+\end{theorem}
+
+\begin{corollary}
+	$\tau \LogicInt = \LogicSFour$ である．
+\end{corollary}
+
+\begin{theorem}[Blok-Esakiaの定理\cite*{blok_varieties_1976,esakia_theory_1979,esakia_varieties_1979}]
+	中間論理 $\Logic{I\Lambda}$ に対して，$\sigma \Logic{I\Lambda} = \tau\Logic{I\Lambda} \oplus \AxGrz$ である．
+\end{theorem}
+
+\begin{corollary}
+	$\sigma \LogicInt = \LogicSFourGrz$ である．
+\end{corollary}
+
+
+\subsection{算術的意味論}
 
 \begin{remark}
 	以下，理論といえば算術の理論を指すことにする．
 \end{remark}
 
 \begin{definition}
-	様相論理の命題変数から算術の文への写像 $* \colon \Prop_{\LangM} \to \Sent_{\LangA}$ を解釈と呼ぶ．
+	様相論理の命題変数から算術の文への写像 $* \colon \Prop_{\LangM} \to \Sent_{\LangA}$ を
+	算術的解釈\index{さんじゅつてきかいしゃく@算術的解釈}あるいは単に解釈\index{かいしゃく@解釈}と呼ぶ．
 \end{definition}
 
 \begin{definition}
 	解釈 $f$ と理論 $T$ の証明可能性述語 $\Provable_T$ に対して，
-	以下のように定義域が様相論理式一般に拡張された写像 $*_{\Provable_T} \colon \Form_{\LangM} \to \Sent_{\LangA}$ を変換と呼ぶ．
+	以下のように定義域が様相論理式一般に拡張された写像 $*_{\Provable_T} \colon \Form_{\LangM} \to \Sent_{\LangA}$ を
+	算術的変換\index{さんじゅつてきへんかん@算術的変換}あるいは単に変換\index{へんかん@変換}と呼ぶ．
 	ただし読みづらいため，文脈上 $\Provable_T$ が明らかな場合は解釈の記号と同様に $*$ として記号を濫用することにする．
 \end{definition}
 
@@ -257,7 +573,7 @@ Solovay解釈の性質として重要なのが次の補題である．
 さて定理\ref{thm:GL_arith_completeness}の証明が出来る．
 
 \begin{proof}[定理\ref{thm:GL_arith_completeness}の証明(2/3)]
-	$M,1 \nvDash A$ だった．$M$ の単純拡張モデル $M' = (W', R', \Vdash')$ とすると補題\ref{lem:simple_extension}より $M',1 \nvDash A$ でもある．
+	$M,1 \nvDash A$ だった．$M$ の単純拡張モデル $M' = \structure{y, R', \Vdash'}$ とすると補題\ref{lem:simple_extension}より $M',1 \nvDash A$ でもある．
 	$M'$ に対してのSolovay文 $\beta_0, \beta_1, \dots, \beta_n$ を構成し，$*$ はSolovay解釈とする．
 	補題\ref{lem:solovay_interpretation}より $T \vdash \beta_1 \to \lnot A^*$ を得て，対偶を取れば $T \vdash A^* \to \beta_1$ が得られる．
 
@@ -269,7 +585,7 @@ Solovay解釈の性質として重要なのが次の補題である．
 	これらを合わせると $T \vdash \lnot \beta_0$ が得られる．
 	したがってS1より $T \vdash \bigvee_{i \in W \setminus \{0\}} \beta_i$ である．
 
-	$i \in W'$ かつ $i \neq 0$ としたとき，$d(i) \leq d(1)$ である．したがって補題 \ref{lem:cannot_access}より
+	$i \in y$ かつ $i \neq 0$ としたとき，$d(i) \leq d(1)$ である．したがって補題 \ref{lem:cannot_access}より
 	$M',i \vDash \Box^{d(1) + 1} \bot$ が得られる．
 	更に補題\ref{lem:solovay_interpretation}より $T \vdash \beta_i \to (\Box^{d(1) + 1} \bot)^*$ であり，
 	これはすなわち $T \vdash \beta_{i} \to \Provable^{d(1) + 1}_T(\ulcorner \bot \urcorner)$ である．
@@ -284,8 +600,8 @@ Solovay解釈の性質として重要なのが次の補題である．
 
 \subsection{Solovay文の列の構成}
 
-\section{$\LogicGrz$}
-
 \printbibliography
+
+\printindex
 
 \end{document}

@@ -14,6 +14,11 @@ result
 *.blg
 *.run.xml
 *.synctex.gz
+*.idx
+*.ilg
+*.ind
+*.toc
+*.bbl
 
 # misc
 temp
