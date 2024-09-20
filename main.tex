@@ -92,7 +92,7 @@
 \begin{proof}
 	厳密な証明は $n$ についての帰納法を用いて示せばよいが，
 	直感的には $d(x) \leq n$ ということは $x R^{n + 1} y$ となる $y$ が存在しないということを考えれば明らか．
-	\qed
+
 \end{proof}
 
 \subsubsection{$\LogicGL$ について}
@@ -103,12 +103,12 @@
 \end{definition}
 
 \begin{definition}
-	有限 $\LogicGL$ 木モデル $M = (W = \{w_1,\dots,w_n\}, w_1, R, \Vdash)$ に対して，
-	根から下に新しく $w_0$ を生やして拡張した有限木 $\LogicGL$ モデル $(y = \{w_0,w_1,\dots,w_n\}, w_0, R', \Vdash')$ を $M$ の単純拡張モデルと呼ぶ．
+	有限 $\LogicGL$ 木モデル $M = \structure{W = \{w_1,\dots,w_n\}, w_1, R, \Vdash}$ に対して，
+	根から下に新しく $w_0$ を生やして拡張した有限木 $\LogicGL$ モデル $\structure{W' = \{w_0,w_1,\dots,w_n\}, w_0, R', \Vdash'}$ を $M$ の単純拡張モデルと呼ぶ．
 
 	よりきちんと定義すると以下のとおりで，これは有限木 $\LogicGL$ モデルとなる．
 	\begin{itemize}
-		\item $y = W \cup \{w_0\}$
+		\item $W' = W \cup \{w_0\}$
 		\item $R' = R \cup \{(w_0,w_i) \mid w_i \in W\}$
 		\item $w \in W$ について $w \Vdash' p \iff w \Vdash p$
 		\item $w_0 \Vdash' p \iff w_1 \Vdash p$
@@ -120,7 +120,7 @@
 \end{lemma}
 \begin{proof}
 	新しく追加された $w_0$ 以外は元のモデルと同じであり，$w_i \in W \iff w_i \neq w_0$ であるから，ほとんど明らか．
-	\qed
+
 \end{proof}
 
 \subsubsection{$\LogicGrz$ について}
@@ -277,7 +277,7 @@ $\LogicGL$ と同じように，CCFによって有限コンプリートモデル
 \end{proof}
 
 \begin{corollary}
-	$F$ をKripkeフレーム，$A$ は任意の様相論理式とすれば $F \vDash A^\boxdot \iff \reflexv{F} \vDash A^\boxdot$
+	$F$ をKripkeフレーム，$A$ は任意の様相論理式とすれば $F \vDash A^\boxdot \iff\reflexv{F} \vDash A^\boxdot$
 \end{corollary}
 
 \begin{lemma}
@@ -418,22 +418,24 @@ Solovay\cite{solovay_provability_1976}は証明可能性論理の出発点であ
 \begin{theorem}[$\LogicGL$ の算術的完全性定理 \cite*{solovay_provability_1976}]\label{thm:GL_arith_completeness}
 	$\Provable_T$ は $T$ の標準的な証明可能性とし，
 	$A$ は任意の様相論理式とする．
-
 	任意の解釈 $*$ に対して $T \vdash A^{*_{\Provable_T}}$ であるなら，$\LogicGL \vdash A$ である．
 \end{theorem}
 
-\begin{proof}[定理\ref{thm:GL_arith_completeness}の証明(1/3)]
-	対偶を示す．すなわち，$\LogicGL \nvdash A$ であるなら，ある解釈 $*$ が存在して $T \nvdash A^*$ であることを示す．
+証明は込み入っているため，まずはその指針を確認する．
 
-	$\LogicGL \nvdash A$ であるから完全性より，
-	ある有限木モデル $M = (W = \{w_1, \dots, w_n\}, w_1, R, \Vdash)$ が存在して $M,w_1 \nvDash A$ である．
-	ただし今後，$W$ を自然数上のものとすると取り扱いやすい．
-	すなわち，$M = (W = \{1,\dots,n\}, 1, R, \Vdash)$ とし，$M,1 \nvDash A$ として考える．
-\end{proof}
-
+\begin{outline}[定理\ref{thm:GL_arith_completeness}の証明の指針]
+	\begin{enumerate}
+		\item 対偶を示す．すなわち，$\LogicGL \nvdash A$ であるなら，ある解釈 $*$ が存在して $T \nvdash A^*$ であることを示す．
+		\item $\LogicGL \nvdash A$ であるから，完全性よりある有限 $\LogicGL$ 木モデル $M$ とその根 $r$ で $M,r \nvDash A$ である．
+		\item 今，$M$ は自然数上に定義されるものとすると一般性を失わずに今後の議論が行いやすい．
+		      そのため，$M = \structure{\{1,\dots,n\}, 1, R, \Vdash}$ とし，$M,1 \nvDash A$ として考える．
+		\item この $M$ に $0$ を入れて単純拡張したモデル $M'$ を算術の中に埋め込むような解釈 $*$ を構成する．これが所望の解釈となる．
+		\item そのような $*$ で $T \vdash A^*$ を仮定すると議論が破綻するため，$T \nvdash A^*$ であることが従う．
+	\end{enumerate}
+\end{outline}
 
 \begin{definition}
-	$M = (W = \{0,1,\dots,n\}, 0, R, \Vdash)$ に対し，以下の4条件を満たす $n + 1$ 個の文の列 $\beta_0, \beta_1, \dots, \beta_n$ を $M$ のSolovay文の列と呼ぶ．
+	$M = \structure{W = \{0,1,\dots,n\}, 0, R, \Vdash}$ に対し，以下の4条件を満たす $n + 1$ 個の文の列 $\beta_0, \beta_1, \dots, \beta_n$ を $M$ のSolovay文の列と呼ぶ．
 	\begin{enumerate}
 		\item $T \vdash \bigvee_{i \in W} \beta_i$
 		\item $i \neq j$ ならば $T \vdash \beta_i \to \lnot \beta_j$
@@ -450,8 +452,10 @@ Solovay\cite{solovay_provability_1976}は証明可能性論理の出発点であ
 所望の解釈が次である．
 
 \begin{definition}
-	$\beta_0, \beta_1, \dots, \beta_n$ を $M$ のSolovay文の列とする．
-	$p^* \equiv \bigvee_{\substack{i \in W \\ M, i \Vdash p}} \beta_i$ として定義される解釈 $*$ をSolovay解釈と呼ぶ．
+	$\beta_0, \beta_1, \dots, \beta_n$ を $M$ のSolovay文の列とする．次のように定義される解釈 $*$ をSolovay解釈と呼ぶ．
+	\begin{equation*}
+		p^* \equiv \bigvee_{\substack{i \in W \\ M, i \Vdash p}} \beta_i
+	\end{equation*}
 \end{definition}
 
 Solovay解釈の性質として重要なのが次の補題である．
@@ -473,7 +477,8 @@ Solovay解釈の性質として重要なのが次の補題である．
 			            $i \vDash p$ のとき，$T \vdash \beta_i \to \bigvee_{j \Vdash p} \beta_j $ を示せば良いが，これは明らか．
 			      \item
 			            $i \nvDash p$ のとき $T \vdash \beta_i \to \lnot \bigvee_{j \Vdash p} \beta_j$ を示す．
-			            これは $T \vdash \beta_i \to \bigwedge_{j \Vdash p} \lnot \beta_j$ と同値である．
+			            これは $T \vdash \bigvee_{j \Vdash p} \beta_j \to \lnot \beta_i$ を示せば良く，
+			            S2 と $j \neq i$ であることからわかる．
 		      \end{enumerate}
 		\item $B \equiv \bot$ のときは明らか．
 		\item $B \equiv C \to D$ のときは帰納法の仮定を用いて明らか．
@@ -496,33 +501,38 @@ Solovay解釈の性質として重要なのが次の補題である．
 			            これは $T \vdash (\Box C)^* \to \lnot \beta_i$ であり，対偶を取れば $T \vdash \beta_i \to \lnot (\Box C)^*$ となる．
 		      \end{enumerate}
 	\end{itemize}
-	\qed
 \end{proof}
 
-さて定理\ref{thm:GL_arith_completeness}の証明が出来る．
+これで定理\ref{thm:GL_arith_completeness}の証明の準備が整った．
 
-\begin{proof}[定理\ref{thm:GL_arith_completeness}の証明(2/3)]
-	$M,1 \nvDash A$ だった．$M$ の単純拡張モデル $M' = \structure{y, R', \Vdash'}$ とすると補題\ref{lem:simple_extension}より $M',1 \nvDash A$ でもある．
-	$M'$ に対してのSolovay文 $\beta_0, \beta_1, \dots, \beta_n$ を構成し，$*$ はSolovay解釈とする．
-	補題\ref{lem:solovay_interpretation}より $T \vdash \beta_1 \to \lnot A^*$ を得て，対偶を取れば $T \vdash A^* \to \beta_1$ が得られる．
+\begin{proof}[定理\ref{thm:GL_arith_completeness}の証明]
+	対偶を示す．すなわち，$\LogicGL \nvdash A$ であるなら，ある解釈 $*$ が存在して $T \nvdash A^*$ であることを示す．
+
+	$\LogicGL \nvdash A$ であるから完全性より，
+	ある有限木モデル $M = \structure{W = \{1, \dots, n\}, 1, R, \Vdash}$ が存在して $M,1 \nvDash A$ である．
+	$M$ に $0$ を入れて単純拡張したモデル $M' = \structure{W'=\{0,1,\dots,n\},0, R', \Vdash'}$ とすると，
+	補題\ref{lem:simple_extension}より $M',1 \nvDash A$ でもある．
+	この$M'$ に対してのSolovay文 $\beta_0, \beta_1, \dots, \beta_n$ を構成し，$*$ をそのSolovay解釈として構成すると，これが所望の解釈となる．
 
 	今，仮に $T \vdash A^*$ と仮定すると議論が破綻することを示す．
 
-	先ほどと合わせると $T \vdash \beta_1$ であり，更に導出可能性条件 D1 より $T \vdash \Provable_T(\ulcorner \beta_1 \urcorner)$ が得られる．
-	一方，$M$ が単純拡張モデルなので $0 R' 1$ であるからS4より $T \vdash \beta_0 \to \lnot \Provable_T(\ulcorner \beta_1 \urcorner)$ であり，
+	補題\ref{lem:solovay_interpretation}より $T \vdash \beta_1 \to \lnot A^*$ であり，対偶を取れば $T \vdash A^* \to \beta_1$ である．
+	よって $T \vdash \beta_1$ であり，更にD1より $T \vdash \Provable_T(\ulcorner \beta_1 \urcorner)$ が得られる．
+	一方，$M'$ が単純拡張モデルなので $0 R' 1$ であるからS4より $T \vdash \beta_0 \to \lnot \Provable_T(\ulcorner \beta_1 \urcorner)$ であり，
 	対偶を取れば $T \vdash \Provable_T(\ulcorner \beta_1 \urcorner) \to \lnot \beta_0$ が得られる．
 	これらを合わせると $T \vdash \lnot \beta_0$ が得られる．
 	したがってS1より $T \vdash \bigvee_{i \in W \setminus \{0\}} \beta_i$ である．
 
-	$i \in y$ かつ $i \neq 0$ としたとき，$d(i) \leq d(1)$ である．したがって補題 \ref{lem:cannot_access}より
+	$i \in W'$ かつ $i \neq 0$ としたとき，$d(i) \leq d(1)$ である．したがって補題\ref{lem:cannot_access}より
 	$M',i \vDash \Box^{d(1) + 1} \bot$ が得られる．
 	更に補題\ref{lem:solovay_interpretation}より $T \vdash \beta_i \to (\Box^{d(1) + 1} \bot)^*$ であり，
 	これはすなわち $T \vdash \beta_{i} \to \Provable^{d(1) + 1}_T(\ulcorner \bot \urcorner)$ である．
 
-	$T \vdash \bigvee_{i \in W \setminus \{0\}} \beta_i$ と合わせると $T \vdash \Provable^{d(1) + 1}_T(\ulcorner \bot \urcorner)$ を得る．
-	$\Provable^{d(1) + 1}_T(\ulcorner \bot \urcorner)$ は $\Sigma_1$ 文であるから，$\Sigma_1$ 健全性より $T \vdash \bot$ が言える．
+	$i$ の取り方から $T \vdash \bigvee_{i \in W \setminus \{0\}} \beta_i$ と合わせることができ，
+	$T \vdash \Provable^{d(1) + 1}_T(\ulcorner \bot \urcorner)$ を得る．
+	$\Provable^{d(1) + 1}_T(\ulcorner \bot \urcorner)$ は $\Sigma_1$ 文であるから，$\Sigma_1$ 健全性より $\mathbb{N} \vdash \bot$ が言える．
 	しかしこれはおかしい．よって仮定がおかしく，$T \nvdash A^*$ である．
-	\qed
+
 \end{proof}
 
 残ったのはSolovay文の列が構成可能であることを示すことである．

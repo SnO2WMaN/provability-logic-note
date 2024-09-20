@@ -69,4 +69,13 @@
 }{%
 	\endtrivlist
 	\@endpefalse
+	\qed
+}
+
+
+\newenvironment{outline}[1][\proofname]{%
+	\renewcommand{\qedsymbol}{$\blacksquare$}%
+	\begin{proof}[#1]%
+		}{%
+	\end{proof}%
 }
