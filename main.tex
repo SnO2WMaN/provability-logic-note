@@ -3,79 +3,13 @@
 \usepackage{amssymb}
 \usepackage{amsfonts}
 \usepackage{amsthm}
+\usepackage{macros} 
 
 \usepackage[backend=biber,style=alphabetic,url=false]{biblatex}
 \addbibresource{main.bib}
 
 \usepackage{makeidx}
-\makeindex 
-
-\newcommand*{\Lang}[1]{\mathcal{L}_\mathrm{#1}}
-\newcommand*{\LangA}{\Lang{A}}
-\newcommand*{\LangM}{\Lang{M}}
-
-\newcommand*{\Ax}[1]{\mathsf{#1}}
-\newcommand*{\AxK}{\Ax{K}}
-\newcommand*{\AxT}{\Ax{T}}
-\newcommand*{\AxTc}{\Ax{Tc}}
-\newcommand*{\AxFour}{\Ax{4}}
-\newcommand*{\AxFive}{\Ax{5}}
-\newcommand*{\AxD}{\Ax{D}} 
-\newcommand*{\AxL}{\Ax{L}}
-\newcommand*{\AxGrz}{\Ax{Grz}}
-
-\newcommand*{\Logic}[1]{\mathbf{#1}}
-\newcommand*{\LogicK}{\Logic{K}}
-\newcommand*{\LogicKT}{\Logic{KT}}
-\newcommand*{\LogicGL}{\Logic{GL}}
-\newcommand*{\LogicGLS}{\Logic{GLS}}
-\newcommand*{\LogicGrz}{\Logic{Grz}}
-\newcommand*{\LogicD}{\Logic{D}}
-\newcommand*{\LogicSFour}{\Logic{S4}}
-\newcommand*{\LogicSFive}{\Logic{S5}}
-\newcommand*{\LogicSFourGrz}{\Logic{S4Grz}}
-\newcommand*{\LogicSFiveGrz}{\Logic{S5Grz}}
-\newcommand*{\LogicInt}{\Logic{Int}}
-\newcommand*{\LogicCl}{\Logic{Cl}}
-
-\newcommand*{\Prop}{\mathrm{Prop}}
-\newcommand*{\Form}{\mathrm{Form}}
-\newcommand*{\Sent}{\mathrm{Sent}}
-\newcommand*{\Provable}{\mathrm{Pr}}
- 
-\newcommand*{\FrameClass}{\mathbb{F}}
-\newcommand*{\FrameClassOf}[1]{\FrameClass_{#1}}
-
-\newcommand*{\Sub}[1]{\mathrm{Sub}(#1)}
-\newcommand*{\structure}[1]{\langle #1 \rangle}
-
-\theoremstyle{definition}
-\newtheorem{theorem}{定理}[section]
-\newtheorem{lemma}[theorem]{補題}
-\newtheorem{definition}[theorem]{定義}
-\newtheorem{notation}[theorem]{表記}
-\newtheorem{remark}[theorem]{注意}
-\newtheorem{example}[theorem]{例}
-\newtheorem{corollary}[theorem]{系}
-
-\newtheorem*{theorem*}{定理}
-\newtheorem*{lemma*}{補題}
-
-\renewcommand{\proofname}{証明}
-\makeatletter
-\renewenvironment{proof}[1][\proofname]{\par
-    \normalfont 
-    \topsep6\p@\@plus6\p@\relax
-    \trivlist
-    \item\relax
-    % {\itshape
-    {\bfseries\gtfamily
-    #1\@addpunct{.}}\hspace\labelsep\ignorespaces
-    }{%
-    \endtrivlist
-    \@endpefalse
-}
-\makeatother
+\makeindex  
 
 \title{算術的完全性定理}
 \author{Mateusz Zunderewski}
@@ -251,8 +185,6 @@
 
 基本的には $\LogicGL$ のKripke完全性証明と同じように行い，コンプリートモデルの構成も同様に行う．
 
-\newcommand*{\GrzSub}[1]{\mathrm{Sub}^G(#1)}
-
 \begin{definition}
 	有限集合 $\GrzSub{A} := \Sub{A} \cup \{ \Box(\Box \to \Box A) \mid A \in \Sub{A} \}$ と定義する．
 \end{definition}
@@ -325,9 +257,6 @@ $\LogicGL$ と同じように，CCFによって有限コンプリートモデル
 \begin{lemma}\label{lem:Grz_GL_BoxdotCompanion_1}
 	$\LogicGL \vdash A^\boxdot \implies \LogicGrz \vdash A$
 \end{lemma}
-
-\newcommand*{\reflexv}[1]{#1^{=}}
-\newcommand*{\irreflxv}[1]{#1^{\neq}}
 
 \begin{definition}
 	$F = \structure{W, R}$ はKripkeフレームとする．
